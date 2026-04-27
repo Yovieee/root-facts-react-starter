@@ -80,6 +80,7 @@ function App() {
           isRunningRef.current = false;
           actions.setRunning(false);
           actions.setAppState('analyzing');
+          await createDelay(APP_CONFIG.analyzingDelay);
           actions.setDetectionResult({
             className: result.label,
             score: result.confidence / 100
@@ -115,7 +116,6 @@ function App() {
         isRunningRef.current = true;
         actions.setRunning(true);
         actions.resetResults();
-        await createDelay(1000);
         startDetectionLoop();
       } catch (error) {
         actions.setError('Tidak dapat mengakses kamera.');
