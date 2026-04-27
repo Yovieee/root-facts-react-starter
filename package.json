@@ -2,6 +2,7 @@
   "name": "rootfacts-react",
   "version": "1.0.0",
   "description": "RootFacts - AI Plant/Vegetable Fun Facts (React + Vite)",
+  "homepage": "https://Yovieee.github.io/root-facts-react-starter/",
   "type": "module",
   "scripts": {
     "dev": "vite",
