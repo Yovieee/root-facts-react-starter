@@ -7,6 +7,7 @@ import { CameraService } from './services/CameraService';
 import { DetectionService } from './services/DetectionService';
 import { RootFactsService } from './services/RootFactsService';
 import { APP_CONFIG, isValidDetection } from './utils/config';
+import { createDelay } from './utils/common';
 
 function App() {
   const { state, actions } = useAppState();
@@ -114,6 +115,7 @@ function App() {
         isRunningRef.current = true;
         actions.setRunning(true);
         actions.resetResults();
+        await createDelay(1000);
         startDetectionLoop();
       } catch (error) {
         actions.setError('Tidak dapat mengakses kamera.');
