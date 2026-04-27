@@ -29,12 +29,12 @@ export class DetectionService {
       console.log(`Using backend: ${tf.getBackend()}`);
 
       // Load Metadata
-      const metadataResponse = await fetch('/model/metadata.json');
+      const metadataResponse = await fetch(`${import.meta.env.BASE_URL}model/metadata.json`);
       const metadata = await metadataResponse.json();
       this.labels = metadata.labels;
 
       // Load Model
-      this.model = await tf.loadLayersModel('/model/model.json', {
+      this.model = await tf.loadLayersModel(`${import.meta.env.BASE_URL}model/model.json`, {
         onProgress: (p) => {
           if (onProgress) onProgress(Math.floor(p * 100));
         }
