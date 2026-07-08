@@ -45,10 +45,10 @@ export class RootFactsService {
     this.isGenerating = true;
     try {
       const tonePrompts = {
-        normal: `Tell me a fun and educational fact about ${vegetableName}.`,
-        funny: `Tell me a hilarious and wacky fact about ${vegetableName} that would make a kid laugh.`,
-        professional: `Provide a scientific and nutritional insight regarding ${vegetableName} for a health blog.`,
-        casual: `Hey! Tell me something cool and interesting about ${vegetableName} in a friendly way.`
+        normal: `describe vegetable ${vegetableName} in normal way with one sentences`,
+        funny: `describe vegetable ${vegetableName} in funny way with one sentences`,
+        professional: `describe health benefits of vegetable ${vegetableName} in professional way with one sentences`,
+        casual: `describe vegetable ${vegetableName} in casual way with one sentences`
       };
 
       const prompt = tonePrompts[this.currentTone] || tonePrompts.normal;
