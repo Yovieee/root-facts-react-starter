@@ -18,7 +18,7 @@ export class RootFactsService {
       // Adaptive Backend: Priority WebGPU
       const device = navigator.gpu ? 'webgpu' : 'wasm';
 
-      this.generator = await pipeline('text2text-generation', 'HuggingFaceTB/SmolLM2-135M', {
+      this.generator = await pipeline('text2text-generation', 'nickypro/tinyllama-110M', {
         device: device,
         progress_callback: (p) => {
           if (onProgress && p.status === 'progress') {
