@@ -18,8 +18,9 @@ export class RootFactsService {
       // Adaptive Backend: Priority WebGPU
       const device = navigator.gpu ? 'webgpu' : 'wasm';
 
-      this.generator = await pipeline('text-generation', 'nickypro/tinyllama-110M', {
+      this.generator = await pipeline('text-generation', 'onnx-community/Qwen2.5-0.5B-Instruct', {
         device: device,
+        dtype: 'q4', // Quantized 4-bit model (~350MB) for efficiency
         progress_callback: (p) => {
           if (onProgress && p.status === 'progress') {
             onProgress(Math.floor(p.progress));
@@ -40,35 +41,52 @@ export class RootFactsService {
   }
 
   async generateFacts(vegetableName, params = {}) {
-    if (!this.generator) return 'Model not loaded.';
+    if (!this.generator) return 'Model tidak aktif.';
 
     this.isGenerating = true;
     try {
-      const tonePrompts = {
-        normal: `describe vegetable ${vegetableName} in normal way with one sentences`,
-        funny: `describe vegetable ${vegetableName} in funny way with one sentences`,
-        professional: `describe health benefits of vegetable ${vegetableName} in professional way with one sentences`,
-        casual: `describe vegetable ${vegetableName} in casual way with one sentences`
+      const systemInstruction =
+        'You are an expert AI vegetable assistant. ' +
+        'Give a response in one concise, informative sentence in Indonesian. ' +
+        'Ensure the response is accurate and directly describes the requested vegetable in the specified tone.';
+
+      const toneInstructions = {
+        normal: `Berikan fakta menarik singkat tentang sayuran ${vegetableName} dengan nada santai namun informatif.`,
+        funny: `Berikan fakta unik yang lucu dan menghibur tentang sayuran ${vegetableName}.`,
+        professional: `Jelaskan manfaat kesehatan utama dari sayuran ${vegetableName} secara ilmiah dan profesional.`,
+        casual: `Ceritakan info santai dan asyik tentang sayuran ${vegetableName} yang cocok untuk dibaca sehari-hari.`
       };
 
-      const prompt = tonePrompts[this.currentTone] || tonePrompts.normal;
+      const userInstruction = toneInstructions[this.currentTone] || toneInstructions.normal;
+
+      const messages = [
+        { role: 'system', content: systemInstruction },
+        { role: 'user', content: userInstruction }
+      ];
+
+      const formattedPrompt = this.generator.tokenizer.apply_chat_template(messages, {
+        tokenize: false,
+        add_generation_prompt: true
+      });
 
       // Generation Control Parameters
       const generationConfig = {
-        max_new_tokens: params.max_new_tokens || 50,
+        max_new_tokens: params.max_new_tokens || 80,
         temperature: params.temperature || 0.7,
         top_p: params.top_p || 0.9,
         do_sample: params.do_sample !== undefined ? params.do_sample : true,
+        return_full_text: false, // Ensure we only get the assistant's new response
       };
 
-      const results = await this.generator(prompt, generationConfig);
+      const results = await this.generator(formattedPrompt, generationConfig);
 
       this.isGenerating = false;
-      return results[0].generated_text;
+      const generatedText = results[0].generated_text || '';
+      return generatedText.trim();
     } catch (error) {
       this.isGenerating = false;
       console.error('Generation error:', error);
-      return `Failed to generate facts for ${vegetableName}.`;
+      return `Gagal menghasilkan fakta untuk ${vegetableName}.`;
     }
   }
 
