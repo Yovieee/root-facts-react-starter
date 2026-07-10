@@ -18,9 +18,9 @@ export class RootFactsService {
       // Adaptive Backend: Priority WebGPU
       const device = navigator.gpu ? 'webgpu' : 'wasm';
 
-      this.generator = await pipeline('text-generation', 'onnx-community/gemma-4-E2B-it-ONNX', {
+      this.generator = await pipeline('text-generation', 'onnx-community/Qwen3-0.6B-Instruct-ONNX', {
         device: device,
-        dtype: 'q4', // Quantized 4-bit model (~350MB) for efficiency
+        dtype: 'q4',
         progress_callback: (p) => {
           if (onProgress && p.status === 'progress') {
             onProgress(Math.floor(p.progress));

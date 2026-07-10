@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'icons/*.png', 'model/*'],
+      includeAssets: ['favicon.ico', 'icons/*.png', 'screenshots/*.png', 'model/*'],
       manifest: {
         name: 'Root Facts - AI Vegetable Assistant',
         short_name: 'RootFacts',
@@ -29,7 +29,23 @@ export default defineConfig({
             src: 'icons/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'maskable'
+          }
+        ],
+        screenshots: [
+          {
+            src: 'screenshots/desktop.png',
+            sizes: '1024x720',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Root Facts on Desktop'
+          },
+          {
+            src: 'screenshots/mobile.png',
+            sizes: '500x1024',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Root Facts on Mobile'
           }
         ]
       },
